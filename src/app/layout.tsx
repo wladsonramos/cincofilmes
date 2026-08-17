@@ -10,7 +10,7 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "CincoFilmes.com",
+  title: "Cinco Filmes",
   description: "Prove seu conhecimento cinematográfico com estilo.",
 };
 

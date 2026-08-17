@@ -54,12 +54,17 @@ export default function MovieSlot({ movie, onSelectMovie, isRevealed, goal }: Mo
   const isSuccess = goal && rating >= goal.min && rating <= goal.max;
 
   return (
-    <div className="relative flex flex-col items-center w-[140px] md:w-[180px] shrink-0 aspect-[2/3] border border-slate-300 overflow-visible transition-all duration-500">
+    // CONTÊINER RAIZ: Apenas controla o tamanho. Sem bordas. (Para permitir que dropdown e nota fiquem fora)
+    <div className="relative w-[140px] md:w-[180px] shrink-0 aspect-[2/3] transition-all duration-500">
       
       {/* ESTADO 1: Filme Selecionado */}
       {movie ? (
-        <div className="relative w-full h-full">
-          <div className="relative w-full h-full overflow-hidden bg-[#0a0a0a]">
+        <>
+          {/* O Cartão de fato, com bordas e arredondamento forçado via CSS puro */}
+          <div 
+            className="relative w-full h-full overflow-hidden bg-[#0a0a0a] border border-slate-300"
+            style={{ borderRadius: '12px' }}
+          >
             {movie.Poster !== "N/A" ? (
               <img src={movie.Poster} alt={movie.Title} className="w-full h-full object-cover transition-transform duration-700" />
             ) : (
@@ -68,53 +73,62 @@ export default function MovieSlot({ movie, onSelectMovie, isRevealed, goal }: Mo
                 <span className="text-slate-400 text-xs text-center font-medium leading-relaxed">{movie.Title}</span>
               </div>
             )}
+
+            {!isRevealed && (
+              <button 
+                onClick={handleClear} 
+                title="Remover filme"
+                style={{
+                  position: 'absolute',
+                  top: '8px',
+                  right: '8px',
+                  backgroundColor: '#e11d48',
+                  color: '#ffffff',
+                  border: 'none',
+                  padding: '6px',
+                  borderRadius: '50%',
+                  cursor: 'pointer',
+                  zIndex: 50,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 4px 6px rgba(0,0,0,0.5)'
+                }}
+              >
+                <X size={16} />
+              </button>
+            )}
           </div>
 
-          {!isRevealed && (
-            <button 
-              onClick={handleClear} 
-              title="Remover filme"
-              style={{
-                position: 'absolute',
-                top: '8px',
-                right: '8px',
-                backgroundColor: '#e11d48',
-                color: '#ffffff',
-                border: 'none',
-                padding: '6px',
-                borderRadius: '50%',
-                cursor: 'pointer',
-                zIndex: 50,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 4px 6px rgba(0,0,0,0.5)'
-              }}
-            >
-              <X size={16} />
-            </button>
-          )}
-
+          {/* Nota do Filme: Espaçamento maior (bottom-[-45px]) e design limpo sem fundo (como na imagem) */}
           {isRevealed && (
-            <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-black shadow-xl border border-slate-700 bg-[#050505] text-white z-30 transition-all duration-500">
-              <span>{movie.imdbRating}</span>
+            <div className="absolute bottom-[-45px] left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-30 transition-all duration-500 whitespace-nowrap">
+              <span className="text-xl md:text-2xl font-bold tracking-wide text-white">{movie.imdbRating}</span>
               {isSuccess ? (
-                <CheckCircle2 size={16} className="text-emerald-500" />
+                <CheckCircle2 size={24} className="text-white" strokeWidth={2.5} />
               ) : (
-                <XCircle size={16} className="text-rose-500" />
+                <XCircle size={24} className="text-white" strokeWidth={2.5} />
               )}
             </div>
           )}
-        </div>
+        </>
       ) : (
-        /* ESTADO 2: Vazio */
-        <div className="flex flex-col items-center justify-center h-full w-full p-2 bg-transparent hover:bg-slate-900/30 transition-colors">
+        /* ESTADO 2: Vazio (Cartão com bordas e arredondamento forçado via CSS puro) */
+        <div 
+          className="flex flex-col items-center h-full w-full bg-transparent hover:bg-slate-900/30 transition-colors border border-slate-300"
+          style={{ borderRadius: '12px' }}
+        >
           
-          {/* Ícone de Claquete adicionado acima da barra de busca */}
-          <Clapperboard size={32} className="text-slate-500 mb-4" strokeWidth={1.5} />
+          {/* Ícone central - O flex-1 garante que ele ocupe o meio da tela empurrando a barra para baixo */}
+          <div className="flex-1 flex items-center justify-center">
+            <Clapperboard size={32} className="text-slate-500" strokeWidth={1.5} />
+          </div>
 
-          {/* Barra de Busca diminuída (de w-[95%] para w-[85%]) e centralizada */}
-          <div className="relative w-[85%] flex items-center bg-[#050505] border border-slate-500 rounded-full px-3 py-2.5 focus-within:border-slate-300 focus-within:bg-slate-900 transition-all shadow-inner">
+          {/* Barra de Busca - Afastada perfeitamente do rodapé usando marginBottom explícito */}
+          <div 
+            className="relative w-[85%] flex items-center bg-[#050505] border border-slate-500 rounded-full px-3 py-2.5 focus-within:border-slate-300 focus-within:bg-slate-900 transition-all shadow-inner"
+            style={{ marginBottom: '24px' }}
+          >
             {isSearching ? (
               <Loader2 className="text-slate-400 animate-spin shrink-0" size={14} />
             ) : (
@@ -136,7 +150,10 @@ export default function MovieSlot({ movie, onSelectMovie, isRevealed, goal }: Mo
 
       {/* DROPDOWN AUTOCOMPLETE */}
       {showDropdown && !movie && (
-        <div className="absolute top-full left-1/2 -translate-x-1/2 w-[240px] bg-slate-900 border border-slate-700 rounded-xl mt-2 z-50 max-h-60 overflow-y-auto shadow-2xl custom-scrollbar">
+        <div 
+          className="absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 w-[240px] bg-slate-900 border border-slate-700 mt-2 z-50 max-h-60 overflow-y-auto shadow-2xl custom-scrollbar"
+          style={{ borderRadius: '12px' }}
+        >
           {!isSearching && results.length === 0 && searchTerm.length > 2 && (
              <div className="p-4 text-center text-xs text-slate-400">Nenhum filme encontrado.</div>
           )}

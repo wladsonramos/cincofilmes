@@ -48,8 +48,8 @@ export default function Home() {
 
   return (
     <main 
-      className="relative min-h-screen font-sans flex flex-col items-center pt-16 pb-12 px-4 overflow-hidden"
-      style={{ backgroundColor: '#f8f9fa' }} // Fundo gelo bem claro
+      className="relative min-h-screen font-sans flex flex-col items-center pt-10 md:pt-16 pb-12 px-4 overflow-hidden"
+      style={{ backgroundColor: '#f8f9fa', boxSizing: 'border-box' }} 
     >
       
       {/* Fundo com ícones flutuantes */}
@@ -68,22 +68,29 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center">
+      <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center" style={{ boxSizing: 'border-box' }}>
 
         {/* Cabeçalho */}
-        <header className="text-center w-full" style={{ marginBottom: '40px' }}>
+        <header className="text-center w-full" style={{ marginBottom: '40px', boxSizing: 'border-box' }}>
           <h1 
-            style={{ color: '#000080', fontSize: '2.5rem', fontWeight: '900', letterSpacing: '0.1em', marginBottom: '40px' }}
+            style={{ 
+              color: '#000080', 
+              fontSize: 'clamp(2rem, 6vw, 2.5rem)', // Responsivo: encolhe em telas pequenas
+              fontWeight: '900', 
+              letterSpacing: '0.1em', 
+              marginBottom: '30px' 
+            }}
           >
             CINCO FILMES
           </h1>
 
-          {/* Card Branco Central (Forçado com CSS Puro para não quebrar) */}
+          {/* Card Branco Central Totalmente Responsivo */}
           <div 
             style={{ 
               backgroundColor: '#ffffff', 
               borderRadius: '16px', 
-              padding: '24px 32px', 
+              padding: '24px 20px', // Padding horizontal ajustado
+              boxSizing: 'border-box', // Garante que não vaze a tela
               boxShadow: '0 12px 40px rgba(0,0,128,0.1)', 
               width: '100%', 
               maxWidth: '500px', 
@@ -94,7 +101,7 @@ export default function Home() {
             }}
           >
             
-            <span style={{ fontSize: '18px', fontWeight: '500', color: '#000080', marginBottom: '16px' }}>
+            <span style={{ fontSize: 'clamp(16px, 4vw, 18px)', fontWeight: '500', color: '#000080', marginBottom: '16px', textAlign: 'center' }}>
               Existem 5 filmes de...
             </span>
             
@@ -102,7 +109,8 @@ export default function Home() {
             <div 
               style={{ 
                 display: 'flex', alignItems: 'center', width: '100%', backgroundColor: '#e8eef6', 
-                border: '1.5px solid #000080', borderRadius: '10px', padding: '6px', marginBottom: '20px' 
+                border: '1.5px solid #000080', borderRadius: '10px', padding: '6px', marginBottom: '20px',
+                boxSizing: 'border-box' // Garante que não vaze
               }}
             >
               <button
@@ -125,16 +133,17 @@ export default function Home() {
                 placeholder="Digite um tema..."
                 style={{ 
                   flex: 1, backgroundColor: 'transparent', border: 'none', outline: 'none', color: '#000080', 
-                  fontWeight: '600', textAlign: 'center', fontSize: '15px' 
+                  fontWeight: '600', textAlign: 'center', fontSize: 'clamp(13px, 3.5vw, 15px)', // Fonte responsiva
+                  width: '100%', boxSizing: 'border-box'
                 }}
               />
               
-              <div style={{ width: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#000080' }}>
+              <div style={{ width: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#000080', flexShrink: 0 }}>
                 <ChevronDown size={20} />
               </div>
             </div>
 
-            <span style={{ fontSize: '16px', fontWeight: '500', color: '#000080', marginBottom: '12px' }}>
+            <span style={{ fontSize: 'clamp(14px, 3.5vw, 16px)', fontWeight: '500', color: '#000080', marginBottom: '12px' }}>
               com nota
             </span>
 
@@ -142,7 +151,8 @@ export default function Home() {
             <div 
               style={{ 
                 position: 'relative', display: 'flex', alignItems: 'center', width: '100%', 
-                backgroundColor: '#e8eef6', border: '1.5px solid #000080', borderRadius: '10px', padding: '6px' 
+                backgroundColor: '#e8eef6', border: '1.5px solid #000080', borderRadius: '10px', padding: '6px',
+                boxSizing: 'border-box' // Garante que não vaze
               }}
             >
               <select
@@ -154,8 +164,8 @@ export default function Home() {
                 disabled={isRevealed}
                 style={{ 
                   width: '100%', backgroundColor: 'transparent', border: 'none', outline: 'none', 
-                  color: '#000080', fontWeight: '600', textAlign: 'center', fontSize: '15px', 
-                  height: '38px', appearance: 'none', cursor: 'pointer' 
+                  color: '#000080', fontWeight: '600', textAlign: 'center', fontSize: 'clamp(13px, 3.5vw, 15px)', 
+                  height: '38px', appearance: 'none', cursor: 'pointer', boxSizing: 'border-box'
                 }}
               >
                 {GOALS.map((g) => (
@@ -173,7 +183,7 @@ export default function Home() {
         </header>
 
         {/* Retângulos (Film Strip) */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', width: '100%', gap: '16px', padding: '0 8px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', width: '100%', gap: '12px', boxSizing: 'border-box' }}>
           {slots.map((movie, index) => (
             <MovieSlot
               key={index}
@@ -186,7 +196,7 @@ export default function Home() {
         </div>
 
         {/* Botão Final */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '60px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '60px', width: '100%', boxSizing: 'border-box' }}>
           {!isRevealed ? (
             <button
               disabled={!allFilled}
@@ -205,20 +215,20 @@ export default function Home() {
           ) : (
             <div 
               style={{ 
-                backgroundColor: '#ffffff', padding: '32px', borderRadius: '24px', 
-                boxShadow: '0 12px 40px rgba(0,0,128,0.15)', textAlign: 'center' 
+                backgroundColor: '#ffffff', padding: '32px 20px', borderRadius: '24px', 
+                boxShadow: '0 12px 40px rgba(0,0,128,0.15)', textAlign: 'center', width: '100%', maxWidth: '400px', boxSizing: 'border-box'
               }}
             >
               <p style={{ color: 'rgba(0,0,128,0.6)', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '12px', fontWeight: 'bold', marginBottom: '8px' }}>
                 Resultado
               </p>
-              <h3 style={{ fontSize: '36px', color: '#000080', margin: '0 0 24px 0', fontWeight: '300' }}>
+              <h3 style={{ fontSize: 'clamp(28px, 8vw, 36px)', color: '#000080', margin: '0 0 24px 0', fontWeight: '300' }}>
                 Você acertou <span style={{ fontWeight: '900', color: '#059669' }}>{calculateScore()}</span> de 5
               </h3>
               <button
                 onClick={resetBoard}
                 style={{
-                  display: 'flex', alignItems: 'center', gap: '8px', margin: '0 auto', padding: '12px 32px', 
+                  display: 'flex', alignItems: 'center', gap: '8px', margin: '0 auto', padding: '12px 24px', 
                   backgroundColor: '#000080', color: '#ffffff', borderRadius: '12px', fontSize: '14px', 
                   fontWeight: 'bold', border: 'none', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,128,0.2)'
                 }}

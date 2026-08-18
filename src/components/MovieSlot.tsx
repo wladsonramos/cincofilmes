@@ -54,10 +54,10 @@ export default function MovieSlot({ movie, onSelectMovie, isRevealed, goal }: Mo
   const isSuccess = goal && rating >= goal.min && rating <= goal.max;
 
   return (
-    // Cartão Principal: Forçado com estilo CSS direto para evitar problemas no Tailwind
+    // Largura responsiva com clamp: Adapta-se para caber duas capas mesmo em telas muito pequenas (ex: iPhone SE)
     <div 
       style={{ 
-        width: '160px', 
+        width: 'clamp(135px, 44vw, 160px)', // Flexível e Inteligente
         aspectRatio: '4/5', 
         backgroundColor: '#ffffff', 
         border: '1.5px solid #000080', 
@@ -66,18 +66,19 @@ export default function MovieSlot({ movie, onSelectMovie, isRevealed, goal }: Mo
         flexDirection: 'column', 
         position: 'relative', 
         boxShadow: '0 8px 24px rgba(0,0,128,0.06)', 
-        flexShrink: 0 
+        flexShrink: 0,
+        boxSizing: 'border-box' // Proteção total contra overflow
       }}
     >
       
       {/* ESTADO 1: Filme Selecionado */}
       {movie ? (
-        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+        <div style={{ position: 'relative', width: '100%', height: '100%', boxSizing: 'border-box' }}>
           <div style={{ width: '100%', height: '100%', overflow: 'hidden', borderRadius: '10px' }}>
             {movie.Poster !== "N/A" ? (
               <img src={movie.Poster} alt={movie.Title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             ) : (
-              <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f8f9fa', padding: '16px' }}>
+              <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f8f9fa', padding: '16px', boxSizing: 'border-box' }}>
                 <Film size={36} color="#000080" style={{ opacity: 0.3, marginBottom: '12px' }} />
                 <span style={{ color: '#000080', fontSize: '12px', textAlign: 'center', fontWeight: 'bold' }}>{movie.Title}</span>
               </div>
@@ -103,41 +104,41 @@ export default function MovieSlot({ movie, onSelectMovie, isRevealed, goal }: Mo
             <div 
               style={{
                 position: 'absolute', bottom: '-20px', left: '50%', transform: 'translateX(-50%)',
-                display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 16px', borderRadius: '24px',
+                display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 12px', borderRadius: '24px',
                 backgroundColor: '#ffffff', border: '1.5px solid #000080', color: '#000080',
                 boxShadow: '0 8px 16px rgba(0,0,128,0.15)', zIndex: 30, whiteSpace: 'nowrap'
               }}
             >
-              <span style={{ fontSize: '20px', fontWeight: '900' }}>{movie.imdbRating}</span>
+              <span style={{ fontSize: 'clamp(16px, 4vw, 20px)', fontWeight: '900' }}>{movie.imdbRating}</span>
               {isSuccess ? (
-                <CheckCircle2 size={22} color="#10b981" strokeWidth={2.5} />
+                <CheckCircle2 size={20} color="#10b981" strokeWidth={2.5} />
               ) : (
-                <XCircle size={22} color="#f43f5e" strokeWidth={2.5} />
+                <XCircle size={20} color="#f43f5e" strokeWidth={2.5} />
               )}
             </div>
           )}
         </div>
       ) : (
-        /* ESTADO 2: Vazio (Design da Imagem Mockup) */
-        <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', position: 'relative' }}>
+        /* ESTADO 2: Vazio */
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', position: 'relative', boxSizing: 'border-box' }}>
           
           {/* Ícone Centralizado */}
           <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Clapperboard size={54} color="#000080" strokeWidth={1.5} />
+            <Clapperboard size={48} color="#000080" strokeWidth={1.5} />
           </div>
 
           {/* Barra de Busca Exata da Imagem */}
-          <div style={{ padding: '12px', width: '100%', boxSizing: 'border-box' }}>
+          <div style={{ padding: '10px', width: '100%', boxSizing: 'border-box' }}>
             <div 
               style={{ 
                 display: 'flex', alignItems: 'center', width: '100%', backgroundColor: '#e8eef6', 
-                border: '1.5px solid #000080', borderRadius: '8px', padding: '8px 10px', boxSizing: 'border-box' 
+                border: '1.5px solid #000080', borderRadius: '8px', padding: '6px 8px', boxSizing: 'border-box' 
               }}
             >
               {isSearching ? (
-                <Loader2 color="#000080" size={16} className="animate-spin" />
+                <Loader2 color="#000080" size={14} className="animate-spin flex-shrink-0" />
               ) : (
-                <Search color="#000080" size={16} strokeWidth={2} />
+                <Search color="#000080" size={14} strokeWidth={2} className="flex-shrink-0" />
               )}
               
               <input
@@ -147,8 +148,8 @@ export default function MovieSlot({ movie, onSelectMovie, isRevealed, goal }: Mo
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onFocus={() => { if (results.length > 0) setShowDropdown(true); }}
                 style={{ 
-                  flex: 1, backgroundColor: 'transparent', color: '#000080', fontSize: '13px', 
-                  fontWeight: '600', border: 'none', outline: 'none', marginLeft: '8px', width: '100%' 
+                  flex: 1, backgroundColor: 'transparent', color: '#000080', fontSize: '12px', 
+                  fontWeight: '600', border: 'none', outline: 'none', marginLeft: '6px', width: '100%', boxSizing: 'border-box' 
                 }}
               />
             </div>
@@ -157,13 +158,14 @@ export default function MovieSlot({ movie, onSelectMovie, isRevealed, goal }: Mo
         </div>
       )}
 
-      {/* DROPDOWN AUTOCOMPLETE */}
+      {/* DROPDOWN AUTOCOMPLETE - max-width garante que não vai vazar as bordas da tela */}
       {showDropdown && !movie && (
         <div 
           style={{ 
             position: 'absolute', top: '100%', marginTop: '8px', left: '50%', transform: 'translateX(-50%)', 
-            width: '240px', backgroundColor: '#ffffff', border: '1.5px solid #000080', borderRadius: '12px', 
-            zIndex: 50, maxHeight: '240px', overflowY: 'auto', padding: '6px', boxShadow: '0 10px 25px rgba(0,0,128,0.15)' 
+            width: '240px', maxWidth: '90vw', backgroundColor: '#ffffff', border: '1.5px solid #000080', borderRadius: '12px', 
+            zIndex: 50, maxHeight: '240px', overflowY: 'auto', padding: '6px', boxShadow: '0 10px 25px rgba(0,0,128,0.15)',
+            boxSizing: 'border-box'
           }}
           className="custom-scrollbar"
         >
@@ -179,7 +181,7 @@ export default function MovieSlot({ movie, onSelectMovie, isRevealed, goal }: Mo
               style={{ 
                 width: '100%', textAlign: 'left', padding: '8px', fontSize: '14px', color: '#000080', 
                 display: 'flex', alignItems: 'center', gap: '12px', borderBottom: '1px solid #f1f5f9', 
-                backgroundColor: 'transparent', border: 'none', cursor: 'pointer' 
+                backgroundColor: 'transparent', border: 'none', cursor: 'pointer', boxSizing: 'border-box' 
               }}
               onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#e8eef6'}
               onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}

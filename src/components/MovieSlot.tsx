@@ -54,95 +54,104 @@ export default function MovieSlot({ movie, onSelectMovie, isRevealed, goal }: Mo
   const isSuccess = goal && rating >= goal.min && rating <= goal.max;
 
   return (
-    // CONTÊINER RAIZ: Apenas controla o tamanho. Sem bordas. (Para permitir que dropdown e nota fiquem fora)
-    <div className="relative w-[140px] md:w-[180px] shrink-0 aspect-[2/3] transition-all duration-500">
+    // Cartão Principal: Forçado com estilo CSS direto para evitar problemas no Tailwind
+    <div 
+      style={{ 
+        width: '160px', 
+        aspectRatio: '4/5', 
+        backgroundColor: '#ffffff', 
+        border: '1.5px solid #000080', 
+        borderRadius: '12px', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        position: 'relative', 
+        boxShadow: '0 8px 24px rgba(0,0,128,0.06)', 
+        flexShrink: 0 
+      }}
+    >
       
       {/* ESTADO 1: Filme Selecionado */}
       {movie ? (
-        <>
-          {/* O Cartão de fato, com bordas e arredondamento forçado via CSS puro */}
-          <div 
-            className="relative w-full h-full overflow-hidden bg-[#0a0a0a] border border-slate-300"
-            style={{ borderRadius: '12px' }}
-          >
+        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+          <div style={{ width: '100%', height: '100%', overflow: 'hidden', borderRadius: '10px' }}>
             {movie.Poster !== "N/A" ? (
-              <img src={movie.Poster} alt={movie.Title} className="w-full h-full object-cover transition-transform duration-700" />
+              <img src={movie.Poster} alt={movie.Title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center p-4">
-                <Film size={36} className="text-slate-700 mb-3" />
-                <span className="text-slate-400 text-xs text-center font-medium leading-relaxed">{movie.Title}</span>
+              <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f8f9fa', padding: '16px' }}>
+                <Film size={36} color="#000080" style={{ opacity: 0.3, marginBottom: '12px' }} />
+                <span style={{ color: '#000080', fontSize: '12px', textAlign: 'center', fontWeight: 'bold' }}>{movie.Title}</span>
               </div>
-            )}
-
-            {!isRevealed && (
-              <button 
-                onClick={handleClear} 
-                title="Remover filme"
-                style={{
-                  position: 'absolute',
-                  top: '8px',
-                  right: '8px',
-                  backgroundColor: '#e11d48',
-                  color: '#ffffff',
-                  border: 'none',
-                  padding: '6px',
-                  borderRadius: '50%',
-                  cursor: 'pointer',
-                  zIndex: 50,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 4px 6px rgba(0,0,0,0.5)'
-                }}
-              >
-                <X size={16} />
-              </button>
             )}
           </div>
 
-          {/* Nota do Filme: Espaçamento maior (bottom-[-45px]) e design limpo sem fundo (como na imagem) */}
+          {!isRevealed && (
+            <button 
+              onClick={handleClear} 
+              title="Remover filme"
+              style={{
+                position: 'absolute', top: '8px', right: '8px', backgroundColor: '#e11d48', color: '#ffffff',
+                border: 'none', padding: '6px', borderRadius: '50%', cursor: 'pointer', zIndex: 50,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.2)'
+              }}
+            >
+              <X size={14} strokeWidth={2.5} />
+            </button>
+          )}
+
+          {/* Nota do Filme */}
           {isRevealed && (
-            <div className="absolute bottom-[-45px] left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-30 transition-all duration-500 whitespace-nowrap">
-              <span className="text-xl md:text-2xl font-bold tracking-wide text-white">{movie.imdbRating}</span>
+            <div 
+              style={{
+                position: 'absolute', bottom: '-20px', left: '50%', transform: 'translateX(-50%)',
+                display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 16px', borderRadius: '24px',
+                backgroundColor: '#ffffff', border: '1.5px solid #000080', color: '#000080',
+                boxShadow: '0 8px 16px rgba(0,0,128,0.15)', zIndex: 30, whiteSpace: 'nowrap'
+              }}
+            >
+              <span style={{ fontSize: '20px', fontWeight: '900' }}>{movie.imdbRating}</span>
               {isSuccess ? (
-                <CheckCircle2 size={24} className="text-white" strokeWidth={2.5} />
+                <CheckCircle2 size={22} color="#10b981" strokeWidth={2.5} />
               ) : (
-                <XCircle size={24} className="text-white" strokeWidth={2.5} />
+                <XCircle size={22} color="#f43f5e" strokeWidth={2.5} />
               )}
             </div>
           )}
-        </>
+        </div>
       ) : (
-        /* ESTADO 2: Vazio (Cartão com bordas e arredondamento forçado via CSS puro) */
-        <div 
-          className="flex flex-col items-center h-full w-full bg-transparent hover:bg-slate-900/30 transition-colors border border-slate-300"
-          style={{ borderRadius: '12px' }}
-        >
+        /* ESTADO 2: Vazio (Design da Imagem Mockup) */
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', position: 'relative' }}>
           
-          {/* Ícone central - O flex-1 garante que ele ocupe o meio da tela empurrando a barra para baixo */}
-          <div className="flex-1 flex items-center justify-center">
-            <Clapperboard size={32} className="text-slate-500" strokeWidth={1.5} />
+          {/* Ícone Centralizado */}
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Clapperboard size={54} color="#000080" strokeWidth={1.5} />
           </div>
 
-          {/* Barra de Busca - Afastada perfeitamente do rodapé usando marginBottom explícito */}
-          <div 
-            className="relative w-[85%] flex items-center bg-[#050505] border border-slate-500 rounded-full px-3 py-2.5 focus-within:border-slate-300 focus-within:bg-slate-900 transition-all shadow-inner"
-            style={{ marginBottom: '24px' }}
-          >
-            {isSearching ? (
-              <Loader2 className="text-slate-400 animate-spin shrink-0" size={14} />
-            ) : (
-              <Search className="text-slate-400 shrink-0" size={14} />
-            )}
-            
-            <input
-              type="text"
-              placeholder="Buscar..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onFocus={() => { if (results.length > 0) setShowDropdown(true); }}
-              className="w-full bg-transparent text-center text-slate-200 text-xs font-medium border-none outline-none focus:outline-none focus:ring-0 placeholder:text-slate-600 ml-1"
-            />
+          {/* Barra de Busca Exata da Imagem */}
+          <div style={{ padding: '12px', width: '100%', boxSizing: 'border-box' }}>
+            <div 
+              style={{ 
+                display: 'flex', alignItems: 'center', width: '100%', backgroundColor: '#e8eef6', 
+                border: '1.5px solid #000080', borderRadius: '8px', padding: '8px 10px', boxSizing: 'border-box' 
+              }}
+            >
+              {isSearching ? (
+                <Loader2 color="#000080" size={16} className="animate-spin" />
+              ) : (
+                <Search color="#000080" size={16} strokeWidth={2} />
+              )}
+              
+              <input
+                type="text"
+                placeholder="Buscar..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onFocus={() => { if (results.length > 0) setShowDropdown(true); }}
+                style={{ 
+                  flex: 1, backgroundColor: 'transparent', color: '#000080', fontSize: '13px', 
+                  fontWeight: '600', border: 'none', outline: 'none', marginLeft: '8px', width: '100%' 
+                }}
+              />
+            </div>
           </div>
 
         </div>
@@ -151,26 +160,40 @@ export default function MovieSlot({ movie, onSelectMovie, isRevealed, goal }: Mo
       {/* DROPDOWN AUTOCOMPLETE */}
       {showDropdown && !movie && (
         <div 
-          className="absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 w-[240px] bg-slate-900 border border-slate-700 mt-2 z-50 max-h-60 overflow-y-auto shadow-2xl custom-scrollbar"
-          style={{ borderRadius: '12px' }}
+          style={{ 
+            position: 'absolute', top: '100%', marginTop: '8px', left: '50%', transform: 'translateX(-50%)', 
+            width: '240px', backgroundColor: '#ffffff', border: '1.5px solid #000080', borderRadius: '12px', 
+            zIndex: 50, maxHeight: '240px', overflowY: 'auto', padding: '6px', boxShadow: '0 10px 25px rgba(0,0,128,0.15)' 
+          }}
+          className="custom-scrollbar"
         >
           {!isSearching && results.length === 0 && searchTerm.length > 2 && (
-             <div className="p-4 text-center text-xs text-slate-400">Nenhum filme encontrado.</div>
+             <div style={{ padding: '16px', textAlign: 'center', fontSize: '12px', fontWeight: '500', color: 'rgba(0,0,128,0.6)' }}>
+               Nenhum filme encontrado.
+             </div>
           )}
           {results.map((r) => (
             <button
               key={r.imdbID}
               onClick={() => handleSelect(r)}
-              className="w-full text-left p-2 text-sm text-slate-200 hover:bg-slate-800 flex items-center gap-3 border-b border-slate-800/50 last:border-0 transition-colors"
+              style={{ 
+                width: '100%', textAlign: 'left', padding: '8px', fontSize: '14px', color: '#000080', 
+                display: 'flex', alignItems: 'center', gap: '12px', borderBottom: '1px solid #f1f5f9', 
+                backgroundColor: 'transparent', border: 'none', cursor: 'pointer' 
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#e8eef6'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
             >
               {r.Poster !== "N/A" ? (
-                <img src={r.Poster} className="w-8 h-12 object-cover rounded shadow-sm flex-shrink-0" alt={r.Title} />
+                <img src={r.Poster} alt={r.Title} style={{ width: '36px', height: '48px', objectFit: 'cover', borderRadius: '4px', flexShrink: 0 }} />
               ) : (
-                <div className="w-8 h-12 bg-[#050505] rounded flex-shrink-0 flex items-center justify-center"><Film size={12} className="text-slate-600" /></div>
+                <div style={{ width: '36px', height: '48px', backgroundColor: '#f1f5f9', borderRadius: '4px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Film size={12} color="rgba(0,0,128,0.4)" />
+                </div>
               )}
-              <div className="flex flex-col truncate pr-2">
-                <span className="truncate text-xs font-semibold">{r.Title}</span>
-                <span className="text-[10px] text-slate-500 mt-0.5">{r.Year}</span>
+              <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                <span style={{ fontSize: '12px', fontWeight: 'bold', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.Title}</span>
+                <span style={{ fontSize: '10px', color: 'rgba(0,0,128,0.6)', marginTop: '2px' }}>{r.Year}</span>
               </div>
             </button>
           ))}

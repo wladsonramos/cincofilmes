@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import MovieSlot from "@/components/MovieSlot";
 import { THEMES, GOALS } from "@/utils/gameData";
 import { MovieDetails, QualityGoal } from "@/types";
-import { RotateCcw, Check, ChevronDown, Dices } from "lucide-react";
+import { RotateCcw, Check, ChevronDown, Dices, Clapperboard } from "lucide-react";
 
 export default function Home() {
   const [theme, setTheme] = useState<string>("");
@@ -12,7 +12,6 @@ export default function Home() {
   const [slots, setSlots] = useState<(MovieDetails | null)[]>(Array(5).fill(null));
   const [isRevealed, setIsRevealed] = useState(false);
 
-  // Sorteia um tema aleatório garantindo que não seja igual ao atual
   const pickRandomTheme = () => {
     let newTheme;
     do {
@@ -21,12 +20,10 @@ export default function Home() {
     setTheme(newTheme);
   };
 
-  // Roda apenas uma vez ao carregar a página
   useEffect(() => {
     pickRandomTheme();
   }, []);
 
-  // Limpa o tabuleiro mas SALVA o tema e a nota que o usuário escolheu
   const resetBoard = () => {
     setSlots(Array(5).fill(null));
     setIsRevealed(false);
@@ -50,75 +47,125 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-[#050505] text-slate-200 font-sans flex flex-col items-center pt-16 pb-8 px-4">
-      <div className="w-full max-w-5xl mx-auto flex flex-col items-center">
-        
+    <main 
+      className="relative min-h-screen font-sans flex flex-col items-center pt-16 pb-12 px-4 overflow-hidden"
+      style={{ backgroundColor: '#f8f9fa' }} // Fundo gelo bem claro
+    >
+      
+      {/* Fundo com ícones flutuantes */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 flex items-center justify-center">
+        <div className="absolute top-[10%] left-[10%] transform -rotate-12 scale-150" style={{ opacity: 0.04 }}>
+          <Clapperboard size={64} color="#000080" />
+        </div>
+        <div className="absolute top-[20%] right-[15%] transform rotate-12 scale-125" style={{ opacity: 0.04 }}>
+          <Clapperboard size={56} color="#000080" />
+        </div>
+        <div className="absolute bottom-[20%] left-[15%] transform -rotate-12 scale-125" style={{ opacity: 0.04 }}>
+          <Clapperboard size={64} color="#000080" />
+        </div>
+        <div className="absolute bottom-[10%] right-[10%] transform rotate-6 scale-150" style={{ opacity: 0.04 }}>
+          <Clapperboard size={72} color="#000080" />
+        </div>
+      </div>
+
+      <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center">
+
         {/* Cabeçalho */}
-        <header className="text-center w-full" style={{ marginBottom: '60px' }}>
-          <h1 className="text-2xl font-bold tracking-widest text-slate-100 uppercase mb-12 opacity-80">
-            Cinco Filmes
+        <header className="text-center w-full" style={{ marginBottom: '40px' }}>
+          <h1 
+            style={{ color: '#000080', fontSize: '2.5rem', fontWeight: '900', letterSpacing: '0.1em', marginBottom: '40px' }}
+          >
+            CINCO FILMES
           </h1>
-          
-          <div className="space-y-6 flex flex-col items-center">
+
+          {/* Card Branco Central (Forçado com CSS Puro para não quebrar) */}
+          <div 
+            style={{ 
+              backgroundColor: '#ffffff', 
+              borderRadius: '16px', 
+              padding: '24px 32px', 
+              boxShadow: '0 12px 40px rgba(0,0,128,0.1)', 
+              width: '100%', 
+              maxWidth: '500px', 
+              margin: '0 auto', 
+              display: 'flex', 
+              flexDirection: 'column', 
+              alignItems: 'center' 
+            }}
+          >
             
-            {/* Seleção de Tema Interativa */}
-            <div className="flex flex-col md:flex-row items-center justify-center gap-3 text-3xl md:text-4xl font-light text-slate-300">
-              <span className="text-xl md:text-3xl">Existem 5 filmes de...</span>
+            <span style={{ fontSize: '18px', fontWeight: '500', color: '#000080', marginBottom: '16px' }}>
+              Existem 5 filmes de...
+            </span>
+            
+            {/* Input de Tema */}
+            <div 
+              style={{ 
+                display: 'flex', alignItems: 'center', width: '100%', backgroundColor: '#e8eef6', 
+                border: '1.5px solid #000080', borderRadius: '10px', padding: '6px', marginBottom: '20px' 
+              }}
+            >
+              <button
+                onClick={pickRandomTheme}
+                disabled={isRevealed}
+                style={{ 
+                  backgroundColor: '#000080', color: '#ffffff', borderRadius: '8px', width: '38px', height: '38px', 
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', cursor: 'pointer', flexShrink: 0
+                }}
+                title="Sortear tema aleatório"
+              >
+                <Dices size={20} />
+              </button>
               
-              <div className="flex items-center w-[280px] md:w-[380px] bg-transparent border border-slate-700 hover:border-slate-500 focus-within:border-slate-400 rounded-full p-1.5 transition-all shadow-inner mt-2 md:mt-0">
-                
-                <button
-                  onClick={pickRandomTheme}
-                  disabled={isRevealed}
-                  className="flex items-center justify-center w-9 h-9 rounded-full bg-slate-800/60 text-slate-400 hover:bg-slate-700 hover:text-slate-200 transition-colors disabled:opacity-50 shrink-0"
-                  title="Sortear tema aleatório"
-                >
-                  <Dices size={18} />
-                </button>
-
-                <input
-                  type="text"
-                  value={theme}
-                  onChange={(e) => setTheme(e.target.value)}
-                  disabled={isRevealed}
-                  placeholder="Digite um tema..."
-                  className="flex-1 bg-transparent border-none outline-none focus:ring-0 text-white font-bold text-center placeholder:text-slate-700 placeholder:font-light px-2 min-w-0"
-                />
-
-                <div className="flex items-center justify-center w-9 text-slate-500 shrink-0 pointer-events-none">
-                  <ChevronDown size={18} />
-                </div>
+              <input
+                type="text"
+                value={theme}
+                onChange={(e) => setTheme(e.target.value)}
+                disabled={isRevealed}
+                placeholder="Digite um tema..."
+                style={{ 
+                  flex: 1, backgroundColor: 'transparent', border: 'none', outline: 'none', color: '#000080', 
+                  fontWeight: '600', textAlign: 'center', fontSize: '15px' 
+                }}
+              />
+              
+              <div style={{ width: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#000080' }}>
+                <ChevronDown size={20} />
               </div>
             </div>
-            
-            {/* Seleção de Nota */}
-            <div className="flex flex-col md:flex-row items-center justify-center gap-3 text-xl md:text-2xl font-light text-slate-400 pt-2">
-              <span>com nota</span>
-              
-              {/* O contêiner pai agora gerencia a borda principal */}
-              <div className="flex items-center w-[260px] md:w-[280px] bg-transparent border border-slate-700 hover:border-slate-500 focus-within:border-slate-400 rounded-full p-1.5 transition-all shadow-inner mt-2 md:mt-0">
-                
-                <select
-                  value={goal.id}
-                  onChange={(e) => {
-                    const selected = GOALS.find(g => g.id === e.target.value);
-                    if (selected) setGoal(selected);
-                  }}
-                  disabled={isRevealed}
-                  // CORREÇÃO: Adicionado 'border-none outline-none focus:outline-none focus:ring-0' para matar a borda interna
-                  className="appearance-none flex-1 bg-transparent border-none outline-none focus:outline-none focus:ring-0 font-bold text-blue-400 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-all text-center pl-8 min-w-0"
-                >
-                  {GOALS.map((g) => (
-                    <option key={g.id} value={g.id} style={{textAlign: 'center', backgroundColor: '#ffffff', color: '#000000' }}>
-                      {g.label}
-                    </option>
-                  ))}
-                </select>
-                
-                {/* Seta posicionada dentro do Flexbox, na direita */}
-                <div className="flex items-center justify-center w-8 text-blue-400 shrink-0 pointer-events-none">
-                  <ChevronDown size={18} />
-                </div>
+
+            <span style={{ fontSize: '16px', fontWeight: '500', color: '#000080', marginBottom: '12px' }}>
+              com nota
+            </span>
+
+            {/* Input de Nota */}
+            <div 
+              style={{ 
+                position: 'relative', display: 'flex', alignItems: 'center', width: '100%', 
+                backgroundColor: '#e8eef6', border: '1.5px solid #000080', borderRadius: '10px', padding: '6px' 
+              }}
+            >
+              <select
+                value={goal.id}
+                onChange={(e) => {
+                  const selected = GOALS.find(g => g.id === e.target.value);
+                  if (selected) setGoal(selected);
+                }}
+                disabled={isRevealed}
+                style={{ 
+                  width: '100%', backgroundColor: 'transparent', border: 'none', outline: 'none', 
+                  color: '#000080', fontWeight: '600', textAlign: 'center', fontSize: '15px', 
+                  height: '38px', appearance: 'none', cursor: 'pointer' 
+                }}
+              >
+                {GOALS.map((g) => (
+                  <option key={g.id} value={g.id} style={{ color: '#000080', backgroundColor: '#ffffff' }}>
+                    {g.label}
+                  </option>
+                ))}
+              </select>
+              <div style={{ position: 'absolute', right: '16px', top: '50%', transform: 'translateY(-50%)', color: '#000080', pointerEvents: 'none' }}>
+                <ChevronDown size={20} />
               </div>
             </div>
 
@@ -126,7 +173,7 @@ export default function Home() {
         </header>
 
         {/* Retângulos (Film Strip) */}
-        <div className="flex flex-wrap justify-center w-full px-2" style={{ gap: '18px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', width: '100%', gap: '16px', padding: '0 8px' }}>
           {slots.map((movie, index) => (
             <MovieSlot
               key={index}
@@ -139,29 +186,44 @@ export default function Home() {
         </div>
 
         {/* Botão Final */}
-        <div className="flex flex-col items-center" style={{ marginTop: '80px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '60px' }}>
           {!isRevealed ? (
             <button
               disabled={!allFilled}
               onClick={() => setIsRevealed(true)}
-              className={`flex items-center gap-3 px-10 py-3 rounded-full text-sm font-semibold tracking-wide uppercase transition-all duration-300
-                ${allFilled 
-                  ? 'bg-slate-100 text-slate-900 hover:bg-white hover:scale-105 shadow-[0_0_30px_rgba(255,255,255,0.1)]' 
-                  : 'bg-slate-900 text-slate-600 cursor-not-allowed border border-slate-800'}`}
+              style={{
+                display: 'flex', alignItems: 'center', gap: '8px', padding: '14px 40px', borderRadius: '12px',
+                fontSize: '15px', fontWeight: 'bold', letterSpacing: '1px', border: 'none', cursor: allFilled ? 'pointer' : 'not-allowed',
+                backgroundColor: allFilled ? '#000080' : '#d1d5db',
+                color: allFilled ? '#ffffff' : '#6b7280',
+                boxShadow: allFilled ? '0 8px 20px rgba(0,0,128,0.2)' : 'none',
+                transition: 'all 0.3s'
+              }}
             >
-              <Check size={16} /> Pronto
+              <Check size={20} strokeWidth={3} /> PRONTO
             </button>
           ) : (
-            <div className="text-center animate-in fade-in slide-in-from-bottom-4 duration-700">
-              <p className="text-slate-400 uppercase tracking-widest text-xs mb-2">Resultado</p>
-              <h3 className="text-4xl font-light mb-8 text-white">
-                Você acertou <span className="font-bold text-emerald-400">{calculateScore()}</span> de 5
+            <div 
+              style={{ 
+                backgroundColor: '#ffffff', padding: '32px', borderRadius: '24px', 
+                boxShadow: '0 12px 40px rgba(0,0,128,0.15)', textAlign: 'center' 
+              }}
+            >
+              <p style={{ color: 'rgba(0,0,128,0.6)', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '12px', fontWeight: 'bold', marginBottom: '8px' }}>
+                Resultado
+              </p>
+              <h3 style={{ fontSize: '36px', color: '#000080', margin: '0 0 24px 0', fontWeight: '300' }}>
+                Você acertou <span style={{ fontWeight: '900', color: '#059669' }}>{calculateScore()}</span> de 5
               </h3>
               <button
                 onClick={resetBoard}
-                className="flex items-center gap-2 mx-auto px-6 py-2.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 rounded-full text-sm font-medium transition-colors"
+                style={{
+                  display: 'flex', alignItems: 'center', gap: '8px', margin: '0 auto', padding: '12px 32px', 
+                  backgroundColor: '#000080', color: '#ffffff', borderRadius: '12px', fontSize: '14px', 
+                  fontWeight: 'bold', border: 'none', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,128,0.2)'
+                }}
               >
-                <RotateCcw size={14} /> Tentar Novamente
+                <RotateCcw size={16} strokeWidth={2.5} /> Tentar Novamente
               </button>
             </div>
           )}
